@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CelularZone EC — Smartphones Premium en Ecuador</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ================================================================
+   RESET & VARIABLES
+================================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --g:#00e87a; --g2:#00c3f5; --bg:#07090f; --bg2:#0e1623; --bg3:#141f2f;
+  --card:#111827; --card2:#1a2640; --txt:#eef4ff; --muted:#6b87a8;
+  --red:#ff3d57; --gold:#f5c518; --bdr:rgba(255,255,255,0.07);
+  --shadow:0 24px 60px rgba(0,0,0,0.5);
+}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);overflow-x:hidden;line-height:1.5;}
+a{text-decoration:none;color:inherit;}
+button{font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:none;outline:none;}
+img{display:block;max-width:100%;}
+input,select{font-family:'Plus Jakarta Sans',sans-serif;outline:none;}
+
+/* ================================================================
+   SCROLLBAR
+================================================================ */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--g);border-radius:3px;}
+
+/* ================================================================
+   CURSOR GLOW
+================================================================ */
+#glow{
+  position:fixed;width:600px;height:600px;border-radius:50%;pointer-events:none;
+  z-index:0;background:radial-gradient(circle,rgba(0,232,122,0.04) 0%,transparent 70%);
+  transform:translate(-50%,-50%);transition:left 0.12s ease,top 0.12s ease;
+}
+
+/* ================================================================
+   NAVBAR
+================================================================ */
+#navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:65px;
+  background:rgba(7,9,15,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,232,122,0.1);
+  transition:all 0.3s;
+}
+#navbar.scrolled{background:rgba(7,9,15,0.98);box-shadow:0 4px 30px rgba(0,0,0,0.5);}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:1.85rem;letter-spacing:3px;
+  background:linear-gradient(90deg,var(--g),var(--g2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.nav-logo span{-webkit-text-fill-color:var(--red);color:var(--red);}
+.nav-links{display:flex;align-items:center;gap:1.5rem;}
+.nav-links a{
+  color:var(--muted);font-size:0.8rem;font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;transition:color 0.2s;padding:0.3rem 0;
+  border-bottom:2px solid transparent;
+}
+.nav-links a:hover{color:var(--g);border-bottom-color:var(--g);}
+.nav-wa{
+  background:var(--g)!important;color:#000!important;
+  -webkit-text-fill-color:#000!important;padding:0.45rem 1.2rem!important;
+  border-radius:6px;border-bottom:none!important;
+}
+.nav-wa:hover{background:var(--g2)!important;transform:translateY(-1px);}
+#nav-cart{
+  display:flex;align-items:center;gap:0.5rem;
+  background:var(--card2);border:1px solid var(--bdr);
+  border-radius:8px;padding:0.4rem 1rem;cursor:pointer;
+  font-size:0.85rem;font-weight:600;transition:border-color 0.2s;
+  color:var(--txt);
+}
+#nav-cart:hover{border-color:var(--g);}
+#nav-cart-count{
+  background:var(--red);color:#fff;border-radius:50%;
+  width:20px;height:20px;font-size:0.65rem;font-weight:800;
+  display:none;align-items:center;justify-content:center;
+}
+
+/* ================================================================
+   TICKER MARQUEE
+================================================================ */
+.ticker{background:var(--g);padding:0.6rem 0;overflow:hidden;margin-top:65px;}
+.ticker-inner{
+  display:flex;gap:0;white-space:nowrap;
+  animation:marquee 35s linear infinite;
+}
+.ticker-inner:hover{animation-play-state:paused;}
+.tick-item{padding:0 2rem;font-size:0.72rem;font-weight:800;color:#000;letter-spacing:1.5px;text-transform:uppercase;}
+.tick-dot{color:rgba(0,0,0,0.3);}
+@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ================================================================
+   HERO
+================================================================ */
+.hero{
+  min-height:calc(100vh - 65px);display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:4rem 2rem 6rem;
+  position:relative;overflow:hidden;
+}
+.hero-bg-grad{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -5%,rgba(0,232,122,0.1) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 40% at 90% 90%,rgba(0,195,245,0.08) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 30% at 10% 80%,rgba(0,232,122,0.05) 0%,transparent 50%);
+}
+.hero-grid-lines{
+  position:absolute;inset:0;z-index:0;opacity:0.035;
+  background-image:linear-gradient(rgba(0,232,122,1) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,232,122,1) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.hero-content{position:relative;z-index:1;max-width:850px;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  padding:0.4rem 1.2rem;background:rgba(0,232,122,0.1);
+  border:1px solid rgba(0,232,122,0.3);border-radius:30px;
+  font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--g);
+  margin-bottom:2rem;animation:fadeUp 0.6s ease both;
+}
+.badge-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--g);
+  animation:blink 1.5s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,232,122,0.6);}50%{opacity:0.6;box-shadow:0 0 0 5px rgba(0,232,122,0);}}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4.5rem,13vw,10rem);
+  line-height:0.88;letter-spacing:4px;
+  animation:fadeUp 0.7s 0.1s ease both;
+}
+.h1-accent{
+  background:linear-gradient(90deg,var(--g) 0%,var(--g2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-size:1.05rem;color:var(--muted);line-height:1.75;
+  margin:1.8rem auto 2.8rem;max-width:560px;
+  animation:fadeUp 0.7s 0.18s ease both;
+}
+.hero-ctas{
+  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+  animation:fadeUp 0.7s 0.26s ease both;
+}
+.btn-primary{
+  padding:0.9rem 2.5rem;border-radius:8px;font-weight:800;font-size:0.95rem;
+  background:linear-gradient(135deg,var(--g),var(--g2));color:#000;
+  box-shadow:0 0 40px rgba(0,232,122,0.35);transition:all 0.25s;
+  letter-spacing:0.3px;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(0,232,122,0.55);}
+.btn-outline{
+  padding:0.9rem 2.5rem;border-radius:8px;font-weight:700;font-size:0.95rem;
+  border:1.5px solid rgba(0,232,122,0.4);color:var(--g);background:transparent;
+  transition:all 0.25s;
+}
+.btn-outline:hover{background:rgba(0,232,122,0.1);border-color:var(--g);}
+.hero-stats{
+  display:flex;gap:3.5rem;justify-content:center;flex-wrap:wrap;
+  margin-top:4.5rem;animation:fadeUp 0.7s 0.34s ease both;
+}
+.stat-item{text-align:center;}
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;font-size:3rem;
+  background:linear-gradient(135deg,var(--g),var(--g2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;
+}
+.stat-lbl{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+/* ================================================================
+   SECTION COMMONS
+================================================================ */
+section{padding:5rem 2rem;position:relative;}
+.section-inner{max-width:1300px;margin:0 auto;}
+.section-tag{
+  display:block;font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--g);margin-bottom:0.5rem;font-weight:700;
+}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.8rem,6vw,5.5rem);line-height:0.92;margin-bottom:0.5rem;
+}
+.section-title span{color:var(--g);}
+.section-sub{color:var(--muted);font-size:0.92rem;margin-bottom:3rem;line-height:1.6;}
+
+/* ================================================================
+   BRAND FILTER BAR
+================================================================ */
+.brand-filter{
+  display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;
+  margin-bottom:2.5rem;
+}
+.brand-btn{
+  padding:0.45rem 1.3rem;border-radius:30px;
+  border:1px solid var(--bdr);background:transparent;
+  color:var(--muted);font-size:0.78rem;font-weight:600;
+  cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;
+}
+.brand-btn:hover,.brand-btn.active{
+  background:rgba(0,232,122,0.12);border-color:var(--g);color:var(--g);
+}
+
+/* ================================================================
+   SEARCH BAR
+================================================================ */
+.search-wrap{
+  position:relative;max-width:380px;margin-bottom:2rem;
+}
+.search-wrap input{
+  width:100%;background:var(--card2);border:1px solid var(--bdr);
+  border-radius:10px;padding:0.65rem 1rem 0.65rem 2.8rem;
+  color:var(--txt);font-size:0.88rem;transition:border-color 0.2s;
+}
+.search-wrap input:focus{border-color:var(--g);}
+.search-wrap input::placeholder{color:var(--muted);}
+.search-icon{
+  position:absolute;left:0.9rem;top:50%;transform:translateY(-50%);
+  font-size:1rem;color:var(--muted);pointer-events:none;
+}
+
+/* ================================================================
+   SORT + COUNT ROW
+================================================================ */
+.catalog-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;margin-bottom:1.8rem;
+}
+.catalog-count{font-size:0.82rem;color:var(--muted);}
+.catalog-count span{color:var(--g);font-weight:700;}
+.sort-select{
+  background:var(--card2);border:1px solid var(--bdr);border-radius:8px;
+  padding:0.45rem 0.9rem;color:var(--txt);font-size:0.8rem;
+}
+
+/* ================================================================
+   PRODUCTS GRID
+================================================================ */
+#products-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(285px,1fr));
+  gap:1.5rem;
+}
+
+/* ================================================================
+   PRODUCT CARD
+================================================================ */
+.pcard{
+  background:var(--card);border:1px solid var(--bdr);border-radius:18px;
+  overflow:hidden;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;
+  cursor:pointer;position:relative;display:flex;flex-direction:column;
+}
+.pcard:hover{
+  transform:translateY(-10px);border-color:rgba(0,232,122,0.4);
+  box-shadow:0 30px 80px rgba(0,232,122,0.1);
+}
+.pcard-badge{
+  position:absolute;top:1rem;left:1rem;z-index:3;
+  padding:0.28rem 0.75rem;border-radius:30px;
+  font-size:0.65rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+}
+.badge-hot{background:var(--red);color:#fff;}
+.badge-new{background:var(--g);color:#000;}
+.badge-sale{background:var(--gold);color:#000;}
+.badge-ago{background:rgba(255,255,255,0.1);color:var(--muted);}
+.pcard-fav{
+  position:absolute;top:1rem;right:1rem;z-index:3;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.95rem;cursor:pointer;transition:all 0.2s;
+}
+.pcard-fav:hover,.pcard-fav.loved{background:rgba(255,61,87,0.2);border-color:var(--red);}
+
+/* CARD IMAGE */
+.pcard-img-wrap{
+  height:210px;overflow:hidden;position:relative;
+  background:linear-gradient(150deg,#0d1a2a 0%,#1c3048 100%);
+  display:flex;align-items:center;justify-content:center;
+}
+.pcard-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 60%,rgba(0,232,122,0.06) 0%,transparent 70%);
+}
+.pcard-img-wrap img{
+  max-height:190px;max-width:86%;object-fit:contain;
+  transition:transform 0.4s ease;position:relative;z-index:1;
+  filter:drop-shadow(0 10px 30px rgba(0,0,0,0.7));
+}
+.pcard:hover .pcard-img-wrap img{transform:scale(1.1) translateY(-4px);}
+.pcard-img-wrap .img-placeholder{
+  font-size:4rem;opacity:0.3;position:absolute;
+}
+
+/* CARD BODY */
+.pcard-body{padding:1.2rem;flex:1;display:flex;flex-direction:column;}
+.pcard-brand{
+  font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--g);font-weight:700;margin-bottom:0.25rem;
+}
+.pcard-name{font-size:1.02rem;font-weight:700;margin-bottom:0.6rem;line-height:1.3;}
+.pcard-avail{
+  display:flex;align-items:center;gap:0.45rem;
+  font-size:0.7rem;color:var(--muted);margin-bottom:0.75rem;
+}
+.avail-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--g);
+  animation:avpulse 1.8s ease-in-out infinite;flex-shrink:0;
+}
+.avail-dot.out{background:var(--red);animation:none;}
+@keyframes avpulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.85);}}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;}
+.ptag{
+  font-size:0.66rem;padding:0.2rem 0.55rem;
+  background:rgba(255,255,255,0.05);border-radius:5px;color:var(--txt);
+  border:1px solid rgba(255,255,255,0.04);
+}
+.pcard-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--bdr);padding-top:1rem;margin-top:auto;
+}
+.pcard-price{
+  font-family:'Bebas Neue',sans-serif;font-size:2rem;
+  background:linear-gradient(135deg,var(--g),var(--g2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.pcard-price-old{
+  font-size:0.78rem;color:var(--muted);text-decoration:line-through;
+  display:block;margin-top:-5px;
+}
+.btn-add-card{
+  padding:0.5rem 1.1rem;
+  background:rgba(0,232,122,0.1);border:1.5px solid rgba(0,232,122,0.35);
+  border-radius:8px;color:var(--g);font-size:0.8rem;font-weight:700;
+  transition:all 0.2s;white-space:nowrap;
+}
+.btn-add-card:hover{background:var(--g);color:#000;}
+.btn-add-card:disabled{opacity:0.35;cursor:not-allowed;background:transparent;}
+
+/* ================================================================
+   NO RESULTS
+================================================================ */
+.no-results{
+  grid-column:1/-1;text-align:center;padding:4rem 2rem;
+  color:var(--muted);
+}
+.no-results .nr-icon{font-size:4rem;margin-bottom:1rem;}
+
+/* ================================================================
+   BRANDS SHOWCASE
+================================================================ */
+.brands-sec{background:var(--bg2);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);}
+.brands-logos{
+  display:flex;align-items:center;justify-content:center;
+  gap:2.5rem;flex-wrap:wrap;padding:2.5rem 0;
+}
+.brand-logo-item{
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  opacity:0.4;transition:opacity 0.3s,transform 0.3s;cursor:default;
+}
+.brand-logo-item:hover{opacity:1;transform:translateY(-3px);}
+.brand-logo-name{
+  font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;
+  color:var(--txt);
+}
+.brand-logo-count{font-size:0.65rem;color:var(--g);}
+
+/* ================================================================
+   FEATURES STRIP
+================================================================ */
+.features-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1.5rem;padding:3rem 0;
+}
+.feat-item{
+  background:var(--card);border:1px solid var(--bdr);border-radius:14px;
+  padding:1.5rem;text-align:center;transition:all 0.3s;
+}
+.feat-item:hover{border-color:rgba(0,232,122,0.3);transform:translateY(-4px);}
+.feat-icon{font-size:2.2rem;margin-bottom:0.8rem;}
+.feat-title{font-weight:700;font-size:0.95rem;margin-bottom:0.35rem;}
+.feat-desc{font-size:0.78rem;color:var(--muted);line-height:1.5;}
+
+/* ================================================================
+   PAYMENT METHODS SECTION
+================================================================ */
+.pay-sec{background:var(--bg2);}
+.pay-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1.2rem;
+}
+.pay-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:16px;
+  padding:1.8rem 1.4rem;text-align:center;transition:all 0.3s;
+}
+.pay-card:hover{
+  border-color:rgba(0,232,122,0.35);transform:translateY(-5px);
+  box-shadow:0 20px 50px rgba(0,232,122,0.08);
+}
+.pay-icon{font-size:2.8rem;margin-bottom:0.9rem;}
+.pay-title{font-weight:800;font-size:1rem;margin-bottom:0.4rem;}
+.pay-desc{font-size:0.78rem;color:var(--muted);line-height:1.55;}
+.pay-badge{
+  display:inline-block;margin-top:0.8rem;padding:0.22rem 0.65rem;
+  background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.25);
+  border-radius:12px;font-size:0.65rem;color:var(--g);font-weight:800;letter-spacing:1px;
+}
+
+/* ================================================================
+   WHY US SECTION
+================================================================ */
+.why-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+}
+@media(max-width:768px){.why-grid{grid-template-columns:1fr;gap:2rem;}}
+.why-list{display:flex;flex-direction:column;gap:1.2rem;}
+.why-item{
+  display:flex;gap:1rem;align-items:flex-start;
+  padding:1.2rem;background:var(--card);border:1px solid var(--bdr);
+  border-radius:12px;transition:border-color 0.3s;
+}
+.why-item:hover{border-color:rgba(0,232,122,0.3);}
+.why-ico{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;
+  background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.2);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+}
+.why-txt h4{font-size:0.95rem;font-weight:700;margin-bottom:0.25rem;}
+.why-txt p{font-size:0.8rem;color:var(--muted);line-height:1.5;}
+
+/* ================================================================
+   TESTIMONIALS
+================================================================ */
+.reviews-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.2rem;
+}
+.review-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:16px;
+  padding:1.5rem;transition:all 0.3s;
+}
+.review-card:hover{border-color:rgba(0,232,122,0.25);transform:translateY(-3px);}
+.review-stars{color:var(--gold);font-size:0.9rem;margin-bottom:0.7rem;letter-spacing:2px;}
+.review-text{font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;font-style:italic;}
+.review-author{display:flex;align-items:center;gap:0.7rem;}
+.review-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(0,232,122,0.15);border:1px solid rgba(0,232,122,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:0.85rem;color:var(--g);flex-shrink:0;
+}
+.review-name{font-weight:700;font-size:0.88rem;}
+.review-city{font-size:0.72rem;color:var(--muted);}
+
+/* ================================================================
+   CONTACT SECTION
+================================================================ */
+.contact-sec{background:var(--bg3);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+@media(max-width:768px){.contact-grid{grid-template-columns:1fr;gap:2rem;}}
+.contact-info-card{
+  background:var(--card);border:1px solid rgba(0,232,122,0.2);
+  border-radius:22px;padding:2.2rem;
+}
+.contact-row{
+  display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.6rem;
+}
+.contact-row:last-child{margin-bottom:0;}
+.contact-icon-box{
+  width:48px;height:48px;border-radius:12px;flex-shrink:0;
+  background:rgba(0,232,122,0.08);border:1px solid rgba(0,232,122,0.18);
+  display:flex;align-items:center;justify-content:center;font-size:1.35rem;
+}
+.contact-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:0.25rem;font-weight:600;}
+.contact-value{font-size:1.02rem;font-weight:700;}
+.contact-value a{color:var(--g);}
+.wa-big-btn{
+  display:inline-flex;align-items:center;gap:0.8rem;
+  padding:1rem 2.2rem;background:#25d366;color:#fff;
+  border-radius:10px;font-weight:800;font-size:1rem;
+  transition:all 0.25s;margin-top:1.5rem;
+}
+.wa-big-btn:hover{background:#1eb854;transform:translateY(-3px);box-shadow:0 15px 40px rgba(37,211,102,0.4);}
+
+/* ================================================================
+   FOOTER
+================================================================ */
+footer{
+  background:#030508;padding:4rem 2rem 2rem;
+  border-top:1px solid var(--bdr);
+}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;
+  margin-bottom:3rem;
+}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr;}}
+.footer-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;
+  background:linear-gradient(90deg,var(--g),var(--g2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:inline-block;margin-bottom:0.8rem;
+}
+.footer-about{font-size:0.82rem;color:var(--muted);line-height:1.7;max-width:320px;}
+.footer-col h5{font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem;color:var(--g);}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem;}
+.footer-col ul li a{font-size:0.8rem;color:var(--muted);transition:color 0.2s;}
+.footer-col ul li a:hover{color:var(--g);}
+.footer-bottom{
+  border-top:1px solid var(--bdr);padding-top:1.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.footer-bottom p{font-size:0.75rem;color:var(--muted);}
+.footer-flags{display:flex;gap:0.5rem;align-items:center;font-size:0.75rem;color:var(--muted);}
+
+/* ================================================================
+   FLOATING CART BUTTON
+================================================================ */
+#float-cart{
+  position:fixed;bottom:2rem;right:2rem;z-index:500;
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--g),var(--g2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;cursor:pointer;
+  box-shadow:0 0 0 0 rgba(0,232,122,0.5);
+  animation:cartpulse 2.5s ease-in-out infinite;
+  transition:transform 0.2s;
+}
+#float-cart:hover{transform:scale(1.12);}
+@keyframes cartpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,232,122,0.4);}50%{box-shadow:0 0 0 14px rgba(0,232,122,0);}}
+#float-cart-cnt{
+  position:absolute;top:-4px;right:-4px;
+  background:var(--red);color:#fff;border-radius:50%;
+  width:22px;height:22px;font-size:0.7rem;font-weight:800;
+  display:none;align-items:center;justify-content:center;
+}
+
+/* ================================================================
+   TOAST NOTIFICATION
+================================================================ */
+#toast{
+  position:fixed;bottom:6.5rem;right:2rem;z-index:2000;
+  background:var(--card2);border:1px solid var(--g);border-radius:12px;
+  padding:0.85rem 1.5rem;font-size:0.88rem;
+  box-shadow:0 10px 40px rgba(0,0,0,0.5);
+  transform:translateX(140%);transition:transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  max-width:280px;
+}
+#toast.visible{transform:translateX(0);}
+#toast strong{color:var(--g);}
+
+/* ================================================================
+   PRODUCT DETAIL MODAL
+================================================================ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:2000;
+  display:flex;align-items:center;justify-content:center;padding:1.5rem;
+  opacity:0;pointer-events:none;transition:opacity 0.3s;
+  backdrop-filter:blur(16px);
+}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal-box{
+  background:var(--card);border:1px solid rgba(0,232,122,0.2);
+  border-radius:24px;width:100%;max-width:580px;
+  max-height:90vh;overflow-y:auto;
+  transform:scale(0.9) translateY(20px);
+  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+}
+.modal-bg.open .modal-box{transform:scale(1) translateY(0);}
+.modal-close-btn{
+  position:absolute;top:1rem;right:1rem;z-index:10;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);
+  color:var(--muted);font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;
+}
+.modal-close-btn:hover{background:rgba(255,255,255,0.15);color:var(--txt);}
+.modal-img-area{
+  height:260px;background:linear-gradient(150deg,#0e1c2e,#1c3048);
+  display:flex;align-items:center;justify-content:center;
+  border-radius:24px 24px 0 0;overflow:hidden;position:relative;
+}
+.modal-img-area::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50%,rgba(0,232,122,0.07),transparent 70%);
+}
+.modal-img-area img{
+  max-height:230px;max-width:85%;object-fit:contain;
+  filter:drop-shadow(0 12px 35px rgba(0,0,0,0.8));position:relative;z-index:1;
+}
+.modal-body{padding:1.8rem;}
+.modal-brand{font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--g);font-weight:700;}
+.modal-name{font-size:1.75rem;font-weight:800;margin:0.3rem 0 0.8rem;line-height:1.2;}
+.modal-price-row{display:flex;align-items:baseline;gap:0.8rem;margin-bottom:0.5rem;}
+.modal-price{
+  font-family:'Bebas Neue',sans-serif;font-size:3rem;
+  background:linear-gradient(135deg,var(--g),var(--g2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.modal-old-price{font-size:0.9rem;color:var(--muted);text-decoration:line-through;}
+.modal-save{
+  display:inline-block;padding:0.2rem 0.6rem;border-radius:6px;
+  background:rgba(245,197,24,0.15);color:var(--gold);
+  font-size:0.72rem;font-weight:800;margin-bottom:1rem;
+}
+.modal-desc{font-size:0.86rem;color:var(--muted);line-height:1.7;margin-bottom:1.3rem;}
+.modal-specs-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:1.5rem;
+}
+.modal-spec-item{
+  background:rgba(255,255,255,0.04);border-radius:10px;padding:0.8rem 1rem;
+  border:1px solid var(--bdr);
+}
+.modal-spec-label{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.25rem;}
+.modal-spec-val{font-size:0.9rem;font-weight:700;}
+.modal-actions{display:flex;gap:0.8rem;flex-wrap:wrap;}
+.modal-actions button,.modal-actions a{
+  flex:1;padding:0.85rem;border-radius:10px;font-weight:800;
+  font-size:0.9rem;cursor:pointer;text-align:center;transition:all 0.2s;
+  font-family:'Plus Jakarta Sans',sans-serif;min-width:140px;
+}
+.modal-btn-add{background:var(--g);border:none;color:#000;}
+.modal-btn-add:hover{background:var(--g2);}
+.modal-btn-add:disabled{opacity:0.4;cursor:not-allowed;}
+.modal-btn-wa{
+  background:transparent;border:1.5px solid #25d366;color:#25d366;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+}
+.modal-btn-wa:hover{background:rgba(37,211,102,0.1);}
+
+/* ================================================================
+   CART MODAL
+================================================================ */
+.cart-modal-box{max-width:640px;}
+.cart-items-list{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem;}
+.cart-item-row{
+  display:flex;align-items:center;gap:1rem;
+  background:rgba(255,255,255,0.04);border-radius:12px;padding:0.9rem;
+  border:1px solid var(--bdr);
+}
+.cart-item-img{
+  width:64px;height:64px;border-radius:8px;object-fit:contain;
+  background:linear-gradient(135deg,#0e1c2e,#1c3048);padding:4px;flex-shrink:0;
+}
+.cart-item-info{flex:1;}
+.cart-item-name{font-weight:700;font-size:0.88rem;margin-bottom:0.2rem;}
+.cart-item-price{color:var(--g);font-weight:800;font-size:0.95rem;}
+.cart-qty-ctrl{display:flex;align-items:center;gap:0.5rem;}
+.qty-btn{
+  width:28px;height:28px;border-radius:6px;
+  background:rgba(255,255,255,0.07);border:1px solid var(--bdr);
+  color:var(--txt);font-size:1rem;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;
+}
+.qty-btn:hover{background:rgba(0,232,122,0.15);border-color:var(--g);}
+.qty-val{font-weight:700;font-size:0.95rem;min-width:24px;text-align:center;}
+.cart-item-remove{
+  width:28px;height:28px;border-radius:6px;
+  background:rgba(255,61,87,0.1);border:1px solid rgba(255,61,87,0.2);
+  color:var(--red);font-size:0.85rem;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;
+}
+.cart-item-remove:hover{background:rgba(255,61,87,0.25);}
+.cart-summary-box{
+  background:rgba(255,255,255,0.03);border-radius:14px;padding:1.2rem;
+  border:1px solid var(--bdr);margin-bottom:1.2rem;
+}
+.cart-summary-row{
+  display:flex;justify-content:space-between;font-size:0.85rem;
+  padding:0.35rem 0;
+}
+.cart-total-row{
+  display:flex;justify-content:space-between;
+  border-top:1px solid var(--bdr);padding-top:0.7rem;margin-top:0.5rem;
+  font-size:1.1rem;font-weight:800;
+}
+.cart-total-val{
+  font-family:'Bebas Neue',sans-serif;font-size:1.6rem;
+  background:linear-gradient(135deg,var(--g),var(--g2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.empty-cart{text-align:center;padding:3rem;color:var(--muted);}
+.empty-cart .ec-icon{font-size:4rem;margin-bottom:1rem;}
+
+/* ================================================================
+   CHECKOUT STEPS
+================================================================ */
+.steps-bar{display:flex;gap:0.5rem;margin-bottom:2rem;}
+.step-pill{
+  flex:1;height:5px;border-radius:3px;
+  background:rgba(255,255,255,0.07);transition:background 0.4s;
+}
+.step-pill.done{background:var(--g);}
+.step-pill.active{background:rgba(0,232,122,0.5);}
+.step-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.7rem;margin-bottom:1.3rem;
+}
+.pay-methods-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:1.2rem;
+}
+.pm-opt{
+  border:1.5px solid var(--bdr);border-radius:12px;padding:0.9rem;
+  display:flex;align-items:center;gap:0.7rem;cursor:pointer;
+  transition:all 0.2s;background:transparent;
+}
+.pm-opt:hover,.pm-opt.selected{border-color:var(--g);background:rgba(0,232,122,0.07);}
+.pm-icon{font-size:1.5rem;flex-shrink:0;}
+.pm-name{font-weight:700;font-size:0.85rem;}
+.pm-sub{font-size:0.7rem;color:var(--muted);}
+.form-section{margin-bottom:1.2rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.form-row.full{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:0.35rem;}
+.field label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600;}
+.field input,.field select,.field textarea{
+  background:rgba(255,255,255,0.05);border:1px solid var(--bdr);
+  border-radius:9px;padding:0.65rem 0.95rem;color:var(--txt);
+  font-size:0.88rem;transition:border-color 0.2s;width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--g);}
+.field input::placeholder{color:rgba(107,135,168,0.6);}
+.field select option{background:var(--card);}
+.bank-info-box{
+  background:rgba(0,232,122,0.07);border:1px solid rgba(0,232,122,0.2);
+  border-radius:12px;padding:1rem;margin-bottom:1rem;font-size:0.82rem;line-height:1.7;
+  color:var(--muted);
+}
+.bank-info-box strong{color:var(--g);}
+.btn-pay-main{
+  width:100%;padding:1rem;background:linear-gradient(135deg,var(--g),var(--g2));
+  border:none;border-radius:12px;color:#000;font-size:1rem;font-weight:800;
+  cursor:pointer;transition:all 0.25s;letter-spacing:0.5px;
+  box-shadow:0 0 30px rgba(0,232,122,0.25);
+}
+.btn-pay-main:hover{box-shadow:0 0 55px rgba(0,232,122,0.45);transform:translateY(-2px);}
+.btn-back-step{
+  width:100%;background:transparent;border:none;color:var(--muted);
+  font-size:0.82rem;margin-top:0.7rem;cursor:pointer;padding:0.5rem;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:color 0.2s;
+}
+.btn-back-step:hover{color:var(--txt);}
+
+/* ================================================================
+   ORDER SUCCESS
+================================================================ */
+.success-wrap{text-align:center;padding:1rem 0;}
+.success-anim{font-size:4.5rem;margin-bottom:1rem;animation:popIn 0.6s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{opacity:0;transform:scale(0.3);}to{opacity:1;transform:scale(1);}}
+.success-wrap h3{
+  font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--g);margin-bottom:0.5rem;
+}
+.success-wrap p{font-size:0.88rem;color:var(--muted);line-height:1.7;margin-bottom:1.3rem;}
+.success-ref{
+  display:inline-block;padding:0.4rem 1.2rem;
+  background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.3);
+  border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;
+  color:var(--g);margin-bottom:1.5rem;letter-spacing:2px;
+}
+.success-order-box{
+  background:rgba(255,255,255,0.03);border-radius:14px;
+  padding:1.2rem;border:1px solid var(--bdr);margin-bottom:1.2rem;text-align:left;
+}
+.srow{display:flex;justify-content:space-between;font-size:0.84rem;padding:0.3rem 0;}
+.srow.total{border-top:1px solid var(--bdr);padding-top:0.6rem;margin-top:0.4rem;font-weight:800;font-size:1rem;}
+.srow.total span:last-child{color:var(--g);}
+.btn-invoice-dl{
+  width:100%;padding:0.9rem;background:transparent;
+  border:1.5px solid var(--g);border-radius:10px;color:var(--g);
+  font-size:0.9rem;font-weight:800;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;
+}
+.btn-invoice-dl:hover{background:rgba(0,232,122,0.1);}
+.btn-wa-success{
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  width:100%;padding:0.9rem;background:rgba(37,211,102,0.12);
+  border:1.5px solid #25d366;border-radius:10px;color:#25d366;
+  font-size:0.9rem;font-weight:800;margin-top:0.7rem;transition:all 0.2s;
+}
+.btn-wa-success:hover{background:rgba(37,211,102,0.2);}
+
+/* ================================================================
+   BACK TO TOP BUTTON
+================================================================ */
+#back-top{
+  position:fixed;bottom:2rem;left:2rem;z-index:400;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--card2);border:1px solid var(--bdr);
+  color:var(--muted);font-size:1.1rem;display:none;
+  align-items:center;justify-content:center;cursor:pointer;
+  transition:all 0.3s;
+}
+#back-top.visible{display:flex;}
+#back-top:hover{border-color:var(--g);color:var(--g);}
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media(max-width:768px){
+  #navbar{padding:0 1rem;}
+  .nav-links{display:none;}
+  .hero h1{font-size:3.5rem;}
+  .modal-specs-grid,.form-row,.pay-methods-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr;}
+  .why-grid,.contact-grid{grid-template-columns:1fr;gap:2rem;}
+  section{padding:3.5rem 1.2rem;}
+}
+@media(max-width:480px){
+  #products-grid{grid-template-columns:1fr;}
+  .pcard-img-wrap{height:180px;}
+}
+</style>
+</head>
+<body>
+
+<div id="glow"></div>
+
+<!-- ================================================================
+     NAVBAR
+================================================================ -->
+<nav id="navbar">
+  <div class="nav-logo">Celular<span>Zone</span> EC</div>
+  <div class="nav-links">
+    <a href="#catalogo">Catálogo</a>
+    <a href="#pagos">Pagos</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#contacto">Contacto</a>
+    <div id="nav-cart" onclick="openCartModal()">
+      🛒 Carrito <span id="nav-cart-count"></span>
+    </div>
+    <a href="https://wa.me/593963193264" class="nav-wa" target="_blank">WhatsApp</a>
+  </div>
+</nav>
+
+<!-- ================================================================
+     TICKER
+================================================================ -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker-inner"></div>
+</div>
+
+<!-- ================================================================
+     HERO
+================================================================ -->
+<section class="hero" id="inicio">
+  <div class="hero-bg-grad"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Stock disponible ahora mismo &nbsp;·&nbsp; 🇪🇨 Ecuador
+    </div>
+    <h1>
+      TU PRÓXIMO<br>
+      <span class="h1-accent">CELULAR</span><br>
+      ESTÁ AQUÍ
+    </h1>
+    <p class="hero-sub">
+      Los mejores smartphones del mercado con garantía oficial, precios reales en dólares
+      y entrega a todo el Ecuador. Compra fácil, paga como quieras, recibe rápido.
+    </p>
+    <div class="hero-ctas">
+      <a href="#catalogo" class="btn-primary">Ver catálogo completo →</a>
+      <a href="https://wa.me/593963193264" class="btn-outline" target="_blank">💬 Consultar por WhatsApp</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num" id="stat-devices">0</span><span class="stat-lbl">Dispositivos</span></div>
+      <div class="stat-item"><span class="stat-num">9</span><span class="stat-lbl">Marcas</span></div>
+      <div class="stat-item"><span class="stat-num">100%</span><span class="stat-lbl">Originales</span></div>
+      <div class="stat-item"><span class="stat-num">1 Año</span><span class="stat-lbl">Garantía</span></div>
+      <div class="stat-item"><span class="stat-num">24/7</span><span class="stat-lbl">Soporte</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     FEATURES STRIP
+================================================================ -->
+<section style="background:var(--bg2);padding:3rem 2rem;">
+  <div class="section-inner">
+    <div class="features-strip">
+      <div class="feat-item"><div class="feat-icon">🛡️</div><div class="feat-title">Garantía Oficial</div><div class="feat-desc">12 meses de garantía en todos los equipos. Sin letra pequeña.</div></div>
+      <div class="feat-item"><div class="feat-icon">🚚</div><div class="feat-title">Envío Rápido</div><div class="feat-desc">Entrega de 24 a 72 horas a cualquier provincia del Ecuador.</div></div>
+      <div class="feat-item"><div class="feat-icon">📄</div><div class="feat-title">Factura Electrónica</div><div class="feat-desc">Emitimos factura válida con RUC en cada compra realizada.</div></div>
+      <div class="feat-item"><div class="feat-icon">💳</div><div class="feat-title">8 Métodos de Pago</div><div class="feat-desc">Efectivo, tarjetas, transferencia, De Una, PayPhone y más.</div></div>
+      <div class="feat-item"><div class="feat-icon">🔒</div><div class="feat-title">Compra Segura</div><div class="feat-desc">Transacciones cifradas y datos 100% protegidos.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     BRANDS
+================================================================ -->
+<section class="brands-sec" style="padding:2rem;">
+  <div class="section-inner">
+    <div class="brands-logos" id="brands-showcase"></div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CATALOG
+================================================================ -->
+<section id="catalogo">
+  <div class="section-inner">
+    <span class="section-tag">// Catálogo 2025</span>
+    <h2 class="section-title">Nuestros <span>Modelos</span></h2>
+    <p class="section-sub">Encuentra el smartphone perfecto para ti. Todos los equipos son originales con caja sellada y garantía.</p>
+
+    <div class="brand-filter" id="brand-filter-bar"></div>
+
+    <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem;">
+      <div class="search-wrap" style="margin-bottom:0;">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Buscar modelo, marca...">
+      </div>
+    </div>
+
+    <div class="catalog-toolbar">
+      <p class="catalog-count">Mostrando <span id="showing-count">0</span> de <span id="total-count">0</span> productos</p>
+      <select class="sort-select" id="sort-select">
+        <option value="default">Orden por defecto</option>
+        <option value="price-asc">Precio: Menor a mayor</option>
+        <option value="price-desc">Precio: Mayor a menor</option>
+        <option value="name-asc">Nombre A–Z</option>
+        <option value="stock-desc">Mayor stock primero</option>
+      </select>
+    </div>
+
+    <div id="products-grid"></div>
+  </div>
+</section>
+
+<!-- ================================================================
+     PAYMENT METHODS
+================================================================ -->
+<section id="pagos" class="pay-sec">
+  <div class="section-inner">
+    <span class="section-tag">// Métodos de pago</span>
+    <h2 class="section-title">Paga como <span>quieras</span></h2>
+    <p class="section-sub">Aceptamos todos los métodos de pago disponibles en Ecuador. Sin recargo por método elegido.</p>
+    <div class="pay-grid">
+      <div class="pay-card"><div class="pay-icon">💵</div><div class="pay-title">Efectivo</div><div class="pay-desc">Pago en dólares al momento de la entrega o en nuestro punto presencial.</div><span class="pay-badge">✓ ACEPTADO</span></div>
+      <div class="pay-card"><div class="pay-icon">💳</div><div class="pay-title">Tarjeta Crédito/Débito</div><div class="pay-desc">Visa, Mastercard y American Express. Hasta 12 cuotas sin interés disponibles.</div><span class="pay-badge">✓ ACEPTADO</span></div>
+      <div class="pay-card"><div class="pay-icon">🏦</div><div class="pay-title">Transferencia Bancaria</div><div class="pay-desc">Banco Pichincha, Produbanco, Banco del Pacífico, Guayaquil y más entidades.</div><span class="pay-badge">✓ ACEPTADO</span></div>
+      <div class="pay-card"><div class="pay-icon">📱</div><div class="pay-title">De Una / Bimo</div><div class="pay-desc">Billeteras digitales ecuatorianas. Pago instantáneo desde tu smartphone.</div><span class="pay-badge">✓ ACEPTADO</span></div>
+      <div class="pay-card"><div class="pay-icon">💛</div><div class="pay-title">PayPhone</div><div class="pay-desc">La billetera digital más popular del Ecuador. Segura, rápida y sin comisiones.</div><span class="pay-badge">✓ ACEPTADO</span></div>
+      <div class="pay-card"><div class="pay-icon">🌐</div><div class="pay-title">PayPal</div><div class="pay-desc">Pagos internacionales 100% seguros con protección al comprador.</div><span class="pay-badge">✓ ACEPTADO</span></div>
+      <div class="pay-card"><div class="pay-icon">🤝</div><div class="pay-title">Crédito Directo</div><div class="pay-desc">Financiamiento propio con cuota de entrada y pagos mensuales flexibles.</div><span class="pay-badge">✓ ACEPTADO</span></div>
+      <div class="pay-card"><div class="pay-icon">📄</div><div class="pay-title">Factura Incluida</div><div class="pay-desc">Emitimos factura electrónica con RUC en cada compra. Válida para declaración.</div><span class="pay-badge">✓ SIEMPRE</span></div>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:0.8rem;margin-top:1.5rem;">🔒 Todas las transacciones están protegidas con cifrado SSL de 256 bits. Tu dinero y datos siempre seguros.</p>
+  </div>
+</section>
+
+<!-- ================================================================
+     WHY US
+================================================================ -->
+<section id="nosotros" style="background:var(--bg2);">
+  <div class="section-inner">
+    <div class="why-grid">
+      <div>
+        <span class="section-tag">// Por qué elegirnos</span>
+        <h2 class="section-title">La mejor <span>experiencia</span></h2>
+        <p class="section-sub">Somos la tienda de smartphones más confiable del Ecuador. Más de 3 años entregando tecnología de calidad.</p>
+        <a href="https://wa.me/593963193264" class="btn-primary" style="display:inline-block;" target="_blank">Hablar con un asesor →</a>
+      </div>
+      <div class="why-list">
+        <div class="why-item"><div class="why-ico">⚡</div><div class="why-txt"><h4>Respuesta inmediata</h4><p>Nuestro equipo responde en menos de 10 minutos por WhatsApp, todos los días.</p></div></div>
+        <div class="why-item"><div class="why-ico">📦</div><div class="why-txt"><h4>Envío con seguimiento</h4><p>Tracking en tiempo real para que sepas exactamente dónde está tu pedido.</p></div></div>
+        <div class="why-item"><div class="why-ico">🔄</div><div class="why-txt"><h4>Cambios y devoluciones</h4><p>7 días para cambios o devoluciones si el equipo presenta algún defecto de fábrica.</p></div></div>
+        <div class="why-item"><div class="why-ico">🎁</div><div class="why-txt"><h4>Accesorios de regalo</h4><p>En compras mayores a $500, incluimos funda y vidrio templado sin costo adicional.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     REVIEWS
+================================================================ -->
+<section>
+  <div class="section-inner">
+    <span class="section-tag">// Clientes satisfechos</span>
+    <h2 class="section-title">Lo que dicen <span>de nosotros</span></h2>
+    <p class="section-sub">Miles de ecuatorianos ya compraron con nosotros. Lee sus experiencias reales.</p>
+    <div class="reviews-grid" id="reviews-grid"></div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CONTACT
+================================================================ -->
+<section id="contacto" class="contact-sec">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div>
+        <span class="section-tag">// Contáctanos</span>
+        <h2 class="section-title">Hablemos <span>ahora</span></h2>
+        <p style="color:var(--muted);line-height:1.75;font-size:0.95rem;margin-bottom:1.5rem;">
+          ¿Tienes preguntas sobre algún modelo? ¿Quieres confirmar disponibilidad o negociar precio? 
+          Escríbenos directamente, tenemos asesores disponibles para ayudarte a elegir el celular perfecto.
+        </p>
+        <a href="https://wa.me/593963193264?text=Hola,%20quiero%20comprar%20un%20celular" class="wa-big-btn" target="_blank">
+          💬 Escribir por WhatsApp
+        </a>
+      </div>
+      <div class="contact-info-card">
+        <div class="contact-row"><div class="contact-icon-box">📞</div><div><div class="contact-label">WhatsApp / Teléfono</div><div class="contact-value"><a href="https://wa.me/593963193264">+593 96 319 3264</a></div></div></div>
+        <div class="contact-row"><div class="contact-icon-box">📧</div><div><div class="contact-label">Correo electrónico</div><div class="contact-value"><a href="mailto:ventas@celularzoneec.com" style="color:var(--g)">ventas@celularzoneec.com</a></div></div></div>
+        <div class="contact-row"><div class="contact-icon-box">📍</div><div><div class="contact-label">Cobertura</div><div class="contact-value">Todo Ecuador 🇪🇨</div></div></div>
+        <div class="contact-row"><div class="contact-icon-box">⏰</div><div><div class="contact-label">Horario de atención</div><div class="contact-value">Lun – Sáb · 8:00 am – 8:00 pm</div></div></div>
+        <div class="contact-row"><div class="contact-icon-box">🚚</div><div><div class="contact-label">Tiempo de entrega</div><div class="contact-value">24 – 72 horas a nivel nacional</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     FOOTER
+================================================================ -->
+<footer>
+  <div class="section-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">CelularZone EC</div>
+        <p class="footer-about">La tienda de smartphones más confiable del Ecuador. Equipos originales, garantía real y la mejor atención al cliente. Llevamos tecnología a todo el país.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navegación</h5>
+        <ul>
+          <li><a href="#catalogo">Catálogo</a></li>
+          <li><a href="#pagos">Métodos de pago</a></li>
+          <li><a href="#nosotros">Por qué elegirnos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Marcas</h5>
+        <ul>
+          <li><a href="#">Apple</a></li>
+          <li><a href="#">Samsung</a></li>
+          <li><a href="#">Xiaomi</a></li>
+          <li><a href="#">Motorola</a></li>
+          <li><a href="#">OnePlus</a></li>
+          <li><a href="#">Google</a></li>
+          <li><a href="#">OPPO</a></li>
+          <li><a href="#">Sony</a></li>
+          <li><a href="#">Nothing</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 CelularZone EC · Todos los derechos reservados · RUC: 1791234567001</p>
+      <p class="footer-flags">🇪🇨 Hecho en Ecuador · 💵 Precios en USD · 📱 +593 96 319 3264</p>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING CART -->
+<div id="float-cart" onclick="openCartModal()" title="Ver carrito">
+  🛒
+  <div id="float-cart-cnt"></div>
+</div>
+
+<!-- BACK TO TOP -->
+<div id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<!-- TOAST -->
+<div id="toast"><strong id="toast-msg"></strong></div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-bg" id="prod-modal" onclick="handleModalBgClick(event,'prod-modal')">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal('prod-modal')">✕</button>
+    <div class="modal-img-area"><img id="modal-img" src="" alt=""></div>
+    <div class="modal-body">
+      <div class="modal-brand" id="modal-brand"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-price-row">
+        <span class="modal-price" id="modal-price"></span>
+        <span class="modal-old-price" id="modal-old"></span>
+      </div>
+      <div class="modal-save" id="modal-save" style="display:none;"></div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-specs-grid" id="modal-specs"></div>
+      <div class="modal-actions">
+        <button class="modal-btn-add" id="modal-add-btn" onclick="addToCartFromModal()">+ Agregar al carrito</button>
+        <a class="modal-btn-wa" id="modal-wa-btn" href="#" target="_blank">💬 Consultar WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART / CHECKOUT MODAL -->
+<div class="modal-bg" id="cart-modal" onclick="handleModalBgClick(event,'cart-modal')">
+  <div class="modal-box cart-modal-box">
+    <button class="modal-close-btn" onclick="closeModal('cart-modal')">✕</button>
+    <div id="cart-modal-content"></div>
+  </div>
+</div>
+
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+
+// ================================================================
+// PRODUCT DATABASE
+// ================================================================
+const PRODUCTS = [
+  {
+    id: 1, brand: "Apple", name: "iPhone 16 Pro Max", cat: "apple",
+    price: 1699, old: 1850, badge: "hot", stock: 4,
+    img: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=400&fit=crop",
+    desc: "El iPhone más poderoso jamás creado. Chip A18 Pro, pantalla ProMotion de 6.9\" con titanio de grado aeroespacial y el sistema de cámaras más avanzado en un smartphone.",
+    specs: { "Pantalla": "6.9\" Super Retina XDR", "Chip": "A18 Pro", "Cámara": "48MP Triple", "RAM": "8 GB", "Batería": "4685 mAh", "Color": "Titanio Desierto" }
+  },
+  {
+    id: 2, brand: "Apple", name: "iPhone 16", cat: "apple",
+    price: 999, old: null, badge: "new", stock: 7,
+    img: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=400&fit=crop",
+    desc: "Dynamic Island, chip A18, cámara de 48MP y el nuevo botón Control de Cámara. USB-C y la experiencia Apple que todos conocen.",
+    specs: { "Pantalla": "6.1\" OLED", "Chip": "A18", "Cámara": "48MP Dual", "RAM": "8 GB", "Batería": "3561 mAh", "Color": "Ultramarino" }
+  },
+  {
+    id: 3, brand: "Apple", name: "iPhone 15 Pro", cat: "apple",
+    price: 1199, old: 1350, badge: "sale", stock: 3,
+    img: "https://images.unsplash.com/photo-1696446702183-cbd49f5df5e5?w=400&h=400&fit=crop",
+    desc: "Titanio natural, chip A17 Pro, botón Acción y cámara de 48MP con zoom óptico 3x. El estándar dorado de los smartphones.",
+    specs: { "Pantalla": "6.1\" ProMotion OLED", "Chip": "A17 Pro", "Cámara": "48MP Triple", "RAM": "8 GB", "Batería": "3274 mAh", "Color": "Titanio Natural" }
+  },
+  {
+    id: 4, brand: "Apple", name: "iPhone 14", cat: "apple",
+    price: 749, old: 850, badge: "sale", stock: 5,
+    img: "https://images.unsplash.com/photo-1664478546384-d57ffe74a78c?w=400&h=400&fit=crop",
+    desc: "Detección de accidentes, Modo Acción en video y conectividad satelital de emergencia. La seguridad Apple en tu bolsillo.",
+    specs: { "Pantalla": "6.1\" Super Retina", "Chip": "A15 Bionic", "Cámara": "12MP Dual", "RAM": "6 GB", "Batería": "3279 mAh", "Color": "Medianoche" }
+  },
+  {
+    id: 5, brand: "Samsung", name: "Galaxy S25 Ultra", cat: "samsung",
+    price: 1499, old: 1650, badge: "hot", stock: 3,
+    img: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop",
+    desc: "Galaxy AI, S Pen integrado, cámara de 200MP y Snapdragon 8 Elite. El smartphone Android más poderoso del mundo en 2025.",
+    specs: { "Pantalla": "6.9\" QHD+ AMOLED", "CPU": "Snapdragon 8 Elite", "Cámara": "200MP 5x", "RAM": "12 GB", "Batería": "5000 mAh", "Color": "Titanio Negro" }
+  },
+  {
+    id: 6, brand: "Samsung", name: "Galaxy S25+", cat: "samsung",
+    price: 1099, old: null, badge: "new", stock: 6,
+    img: "https://images.unsplash.com/photo-1587840171670-8b850147754e?w=400&h=400&fit=crop",
+    desc: "Pantalla AMOLED de 6.7\", Snapdragon 8 Elite y batería de 4900 mAh con Galaxy AI para creadores de contenido.",
+    specs: { "Pantalla": "6.7\" FHD+ AMOLED", "CPU": "Snapdragon 8 Elite", "Cámara": "50MP Triple", "RAM": "12 GB", "Batería": "4900 mAh", "Color": "Plata Hielo" }
+  },
+  {
+    id: 7, brand: "Samsung", name: "Galaxy A55 5G", cat: "samsung",
+    price: 449, old: 499, badge: "sale", stock: 14,
+    img: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=400&h=400&fit=crop",
+    desc: "Super AMOLED 120Hz, resistencia IP67 y cámara de 50MP. Diseño premium al precio más accesible del mercado ecuatoriano.",
+    specs: { "Pantalla": "6.6\" Super AMOLED", "CPU": "Exynos 1480", "Cámara": "50MP Triple", "RAM": "8 GB", "Batería": "5000 mAh", "Color": "Navy" }
+  },
+  {
+    id: 8, brand: "Samsung", name: "Galaxy Z Fold 6", cat: "samsung",
+    price: 1799, old: 1999, badge: "hot", stock: 2,
+    img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop",
+    desc: "El smartphone plegable más avanzado. Pantalla interna de 7.6\", compatible con S Pen y Galaxy AI integrado.",
+    specs: { "Pantalla": "7.6\" Dynamic AMOLED", "CPU": "Snapdragon 8 Gen 3", "Cámara": "50MP Triple", "RAM": "12 GB", "Batería": "4400 mAh", "Color": "Silver Shadow" }
+  },
+  {
+    id: 9, brand: "Xiaomi", name: "Xiaomi 15 Ultra", cat: "xiaomi",
+    price: 1199, old: null, badge: "new", stock: 4,
+    img: "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=400&h=400&fit=crop",
+    desc: "Cámaras co-diseñadas con Leica, sensor periscópico de 200MP y Snapdragon 8 Elite. La fotografía móvil llevada al extremo.",
+    specs: { "Pantalla": "6.73\" LTPO AMOLED", "CPU": "Snapdragon 8 Elite", "Cámara": "200MP Leica", "RAM": "16 GB", "Batería": "6000 mAh", "Color": "Blanco" }
+  },
+  {
+    id: 10, brand: "Xiaomi", name: "Redmi Note 14 Pro+", cat: "xiaomi",
+    price: 379, old: 429, badge: "sale", stock: 18,
+    img: "https://images.unsplash.com/photo-1598327105854-c8674faddf79?w=400&h=400&fit=crop",
+    desc: "Carga turbo de 120W, cámara de 200MP y pantalla AMOLED curvada a 120Hz. El campeón absoluto de precio-calidad.",
+    specs: { "Pantalla": "6.67\" AMOLED 120Hz", "CPU": "Dimensity 7300 Ultra", "Cámara": "200MP Triple", "RAM": "12 GB", "Batería": "5110 mAh", "Color": "Fusion White" }
+  },
+  {
+    id: 11, brand: "Xiaomi", name: "POCO X7 Pro", cat: "xiaomi",
+    price: 359, old: null, badge: "new", stock: 11,
+    img: "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=400&h=400&fit=crop",
+    desc: "Dimensity 8400 Ultra, pantalla a 144Hz y batería de 6550 mAh con carga 90W. El beast definitivo para gamers.",
+    specs: { "Pantalla": "6.67\" AMOLED 144Hz", "CPU": "Dimensity 8400 Ultra", "Cámara": "50MP Triple", "RAM": "12 GB", "Batería": "6550 mAh", "Color": "Titanio Negro" }
+  },
+  {
+    id: 12, brand: "Motorola", name: "Edge 50 Ultra", cat: "motorola",
+    price: 699, old: 799, badge: "sale", stock: 5,
+    img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
+    desc: "Pantalla pOLED a 165Hz, carga inalámbrica Qi2 y cámara co-diseñada Pantone de 50MP. Elegancia y rendimiento.",
+    specs: { "Pantalla": "6.67\" pOLED 165Hz", "CPU": "Snapdragon 8s Gen 3", "Cámara": "50MP Triple", "RAM": "16 GB", "Batería": "4500 mAh", "Color": "Forest Grey" }
+  },
+  {
+    id: 13, brand: "Motorola", name: "Razr 50 Ultra", cat: "motorola",
+    price: 1099, old: 1200, badge: "hot", stock: 3,
+    img: "https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=400&h=400&fit=crop",
+    desc: "Plegable de concha con pantalla externa de 4\" totalmente funcional, bisagra FlexHinge sin arrugas y Snapdragon 8s Gen 3.",
+    specs: { "Pantalla": "6.9\" pOLED + 4\" ext.", "CPU": "Snapdragon 8s Gen 3", "Cámara": "50MP Dual", "RAM": "12 GB", "Batería": "3800 mAh", "Color": "Azul Medianoche" }
+  },
+  {
+    id: 14, brand: "Motorola", name: "Moto G85 5G", cat: "motorola",
+    price: 289, old: null, badge: "new", stock: 20,
+    img: "https://images.unsplash.com/photo-1556656793-08538906a9f8?w=400&h=400&fit=crop",
+    desc: "pOLED 120Hz, 5G y batería de 5000 mAh al precio más asequible del mercado. Perfecto para el uso diario.",
+    specs: { "Pantalla": "6.67\" pOLED 120Hz", "CPU": "Snapdragon 695 5G", "Cámara": "50MP Dual", "RAM": "12 GB", "Batería": "5000 mAh", "Color": "Urban Grey" }
+  },
+  {
+    id: 15, brand: "OnePlus", name: "OnePlus 13", cat: "oneplus",
+    price: 899, old: null, badge: "new", stock: 6,
+    img: "https://images.unsplash.com/photo-1592950630581-03cb41342cc5?w=400&h=400&fit=crop",
+    desc: "Snapdragon 8 Elite, carga SUPERVOOC de 100W, cámaras co-diseñadas con Hasselblad y batería de 6000 mAh. Potencia sin límites.",
+    specs: { "Pantalla": "6.82\" LTPO AMOLED", "CPU": "Snapdragon 8 Elite", "Cámara": "50MP Hasselblad", "RAM": "16 GB", "Batería": "6000 mAh", "Color": "Midnight Ocean" }
+  },
+  {
+    id: 16, brand: "OnePlus", name: "OnePlus 13R", cat: "oneplus",
+    price: 599, old: 649, badge: "sale", stock: 8,
+    img: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=400&h=400&fit=crop",
+    desc: "Snapdragon 8 Gen 2, pantalla ProXDR de 6.78\" y batería de 5500 mAh con carga de 80W. La opción racional del usuario exigente.",
+    specs: { "Pantalla": "6.78\" ProXDR AMOLED", "CPU": "Snapdragon 8 Gen 2", "Cámara": "50MP Triple", "RAM": "16 GB", "Batería": "5500 mAh", "Color": "Iron Gray" }
+  },
+  {
+    id: 17, brand: "Google", name: "Pixel 9 Pro", cat: "google",
+    price: 999, old: null, badge: "new", stock: 4,
+    img: "https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?w=400&h=400&fit=crop",
+    desc: "Google Tensor G4, siete años garantizados de actualizaciones, la mejor IA del mercado y pantalla Actua de 6.3\".",
+    specs: { "Pantalla": "6.3\" LTPO OLED", "CPU": "Google Tensor G4", "Cámara": "50MP Triple", "RAM": "16 GB", "Batería": "4700 mAh", "Color": "Obsidian" }
+  },
+  {
+    id: 18, brand: "Google", name: "Pixel 9", cat: "google",
+    price: 699, old: 749, badge: "sale", stock: 7,
+    img: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=400&fit=crop",
+    desc: "Tensor G4, Google AI nativa, Magic Eraser avanzado y diseño icónico con barra de cámara horizontal característica.",
+    specs: { "Pantalla": "6.3\" Actua OLED", "CPU": "Google Tensor G4", "Cámara": "50MP Dual", "RAM": "12 GB", "Batería": "4700 mAh", "Color": "Porcelain" }
+  },
+  {
+    id: 19, brand: "OPPO", name: "Find X8 Pro", cat: "oppo",
+    price: 1099, old: 1199, badge: "new", stock: 3,
+    img: "https://images.unsplash.com/photo-1601972599748-61e37df4b7d2?w=400&h=400&fit=crop",
+    desc: "Cámaras co-diseñadas con Hasselblad, teleobjetivo periscópico 6x, Dimensity 9400 y batería de 5910 mAh con carga 80W.",
+    specs: { "Pantalla": "6.78\" LTPO AMOLED", "CPU": "Dimensity 9400", "Cámara": "50MP Hasselblad", "RAM": "16 GB", "Batería": "5910 mAh", "Color": "Space Black" }
+  },
+  {
+    id: 20, brand: "Nothing", name: "Phone (3a)", cat: "nothing",
+    price: 349, old: null, badge: "new", stock: 9,
+    img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
+    desc: "Glyph Interface de próxima generación, cámara de 50MP con teleobjetivo dedicado y diseño semitransparente único en el mercado.",
+    specs: { "Pantalla": "6.77\" AMOLED 120Hz", "CPU": "Snapdragon 7s Gen 3", "Cámara": "50MP Triple", "RAM": "8 GB", "Batería": "5000 mAh", "Color": "Negro / Blanco" }
+  },
+  {
+    id: 21, brand: "Sony", name: "Xperia 1 VI", cat: "sony",
+    price: 1299, old: null, badge: "new", stock: 2,
+    img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
+    desc: "Pantalla 4K HDR a 120Hz, óptica Zeiss con zoom continuo óptico, altavoces frontales Full Stage y Snapdragon 8 Gen 3.",
+    specs: { "Pantalla": "6.5\" 4K HDR 120Hz", "CPU": "Snapdragon 8 Gen 3", "Cámara": "52MP Zeiss", "RAM": "12 GB", "Batería": "5000 mAh", "Color": "Negro" }
+  },
+  {
+    id: 22, brand: "Sony", name: "Xperia 10 VI", cat: "sony",
+    price: 449, old: 499, badge: "sale", stock: 6,
+    img: "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=400&h=400&fit=crop",
+    desc: "Pantalla OLED de 6.1\", batería de 5000 mAh con carga solar, resistencia IP68 y altavoces con amplificador Cirrus Logic.",
+    specs: { "Pantalla": "6.1\" FHD+ OLED", "CPU": "Snapdragon 6 Gen 1", "Cámara": "48MP Triple", "RAM": "6 GB", "Batería": "5000 mAh", "Color": "Azul" }
+  }
+];
+
+const BRANDS_META = {
+  apple:    { label: "Apple",    emoji: "🍎" },
+  samsung:  { label: "Samsung",  emoji: "🌟" },
+  xiaomi:   { label: "Xiaomi",   emoji: "⚡" },
+  motorola: { label: "Motorola", emoji: "🔷" },
+  oneplus:  { label: "OnePlus",  emoji: "🔴" },
+  google:   { label: "Google",   emoji: "🌐" },
+  oppo:     { label: "OPPO",     emoji: "💚" },
+  nothing:  { label: "Nothing",  emoji: "⚫" },
+  sony:     { label: "Sony",     emoji: "🎵" }
+};
+
+const REVIEWS = [
+  { name:"Carlos M.", city:"Quito, Pichincha", stars:5, text:"Compré un iPhone 15 Pro y llegó al día siguiente perfecto, sellado. El precio fue el mejor que encontré en Ecuador. 100% recomendado." },
+  { name:"María F.", city:"Guayaquil, Guayas", stars:5, text:"Me atendieron súper bien por WhatsApp, me ayudaron a escoger entre dos modelos. La factura llegó al instante al correo. Excelente servicio." },
+  { name:"Diego R.", city:"Cuenca, Azuay", stars:5, text:"El Samsung Galaxy S25 Ultra que compré es increíble y el precio estuvo genial. Me enviaron con seguimiento y llegó en 48 horas." },
+  { name:"Valeria T.", city:"Manta, Manabí", stars:5, text:"Primera vez que compro celular online y fue una experiencia perfecta. Funda y vidrio de regalo porque compré más de $500. ¡Gracias!" },
+  { name:"Andrés P.", city:"Loja", stars:5, text:"Me dieron crédito directo para pagar el OnePlus 13 en cuotas. Sin complicaciones, sin papeleo. Definitivamente volvería a comprar aquí." },
+  { name:"Sofía C.", city:"Ambato, Tungurahua", stars:5, text:"El Xiaomi Redmi Note llegó en perfectas condiciones. La atención post-venta también es excelente. Ya hice mi segunda compra." }
+];
+
+// ================================================================
+// STATE
+// ================================================================
+let activeBrand = "todos";
+let searchQuery = "";
+let sortMode = "default";
+let cart = [];
+let currentProductId = null;
+let checkoutStep = 1;
+let checkoutMethod = null;
+let lastOrder = null;
+
+// ================================================================
+// INIT
+// ================================================================
+document.addEventListener("DOMContentLoaded", function() {
+  buildTicker();
+  buildBrandsShowcase();
+  buildBrandFilter();
+  buildReviews();
+  renderProducts();
+  animateCounter();
+  setupEventListeners();
+});
+
+function animateCounter() {
+  const el = document.getElementById("stat-devices");
+  const total = PRODUCTS.reduce((a, p) => a + p.stock, 0);
+  let v = 0;
+  const step = total / 60;
+  const t = setInterval(() => {
+    v += step;
+    if (v >= total) { el.textContent = total; clearInterval(t); }
+    else el.textContent = Math.floor(v);
+  }, 16);
+}
+
+function buildTicker() {
+  const msgs = [
+    "📱 Envíos a todo Ecuador",
+    "✅ Garantía oficial en todos los equipos",
+    "💳 Todas las tarjetas aceptadas",
+    "🚀 Stock disponible ahora mismo",
+    "🔒 Factura electrónica en cada compra",
+    "🇪🇨 Servicio 100% ecuatoriano",
+    "⚡ Entrega 24 a 72 horas",
+    "🎁 Accesorios de regalo en compras +$500"
+  ];
+  let html = "";
+  for (let i = 0; i < 4; i++) {
+    msgs.forEach(m => {
+      html += `<span class="tick-item">${m}</span><span class="tick-dot"> • </span>`;
+    });
+  }
+  document.getElementById("ticker-inner").innerHTML = html;
+}
+
+function buildBrandsShowcase() {
+  const container = document.getElementById("brands-showcase");
+  Object.entries(BRANDS_META).forEach(([key, meta]) => {
+    const count = PRODUCTS.filter(p => p.cat === key).length;
+    container.innerHTML += `
+      <div class="brand-logo-item" onclick="filterByBrand('${key}')">
+        <div style="font-size:2rem;">${meta.emoji}</div>
+        <div class="brand-logo-name">${meta.label}</div>
+        <div class="brand-logo-count">${count} modelos</div>
+      </div>`;
+  });
+}
+
+function filterByBrand(brand) {
+  activeBrand = brand;
+  document.querySelectorAll(".brand-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.brand === brand);
+  });
+  renderProducts();
+  document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
+}
+
+function buildBrandFilter() {
+  const bar = document.getElementById("brand-filter-bar");
+  const allBrands = ["todos", ...Object.keys(BRANDS_META)];
+  allBrands.forEach(b => {
+    const btn = document.createElement("button");
+    btn.className = "brand-btn" + (b === "todos" ? " active" : "");
+    btn.dataset.brand = b;
+    btn.textContent = b === "todos" ? "Todos" : BRANDS_META[b].label;
+    btn.addEventListener("click", () => {
+      activeBrand = b;
+      document.querySelectorAll(".brand-btn").forEach(x => x.classList.remove("active"));
+      btn.classList.add("active");
+      renderProducts();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+function buildReviews() {
+  const grid = document.getElementById("reviews-grid");
+  grid.innerHTML = REVIEWS.map(r => `
+    <div class="review-card">
+      <div class="review-stars">${"★".repeat(r.stars)}</div>
+      <p class="review-text">"${r.text}"</p>
+      <div class="review-author">
+        <div class="review-avatar">${r.name.charAt(0)}</div>
+        <div>
+          <div class="review-name">${r.name}</div>
+          <div class="review-city">📍 ${r.city}</div>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+// ================================================================
+// RENDER PRODUCTS
+// ================================================================
+function getFilteredProducts() {
+  let list = PRODUCTS.slice();
+  if (activeBrand !== "todos") list = list.filter(p => p.cat === activeBrand);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.brand.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q)
+    );
+  }
+  switch (sortMode) {
+    case "price-asc":   list.sort((a,b) => a.price - b.price); break;
+    case "price-desc":  list.sort((a,b) => b.price - a.price); break;
+    case "name-asc":    list.sort((a,b) => a.name.localeCompare(b.name)); break;
+    case "stock-desc":  list.sort((a,b) => b.stock - a.stock); break;
+  }
+  return list;
+}
+
+function renderProducts() {
+  const grid = document.getElementById("products-grid");
+  const list = getFilteredProducts();
+  document.getElementById("showing-count").textContent = list.length;
+  document.getElementById("total-count").textContent = PRODUCTS.length;
+
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div class="no-results">
+        <div class="nr-icon">🔍</div>
+        <p style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">Sin resultados</p>
+        <p>No encontramos productos que coincidan con tu búsqueda.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(p => {
+    const isOut = p.stock === 0;
+    const badgeClasses = { hot: "badge-hot", new: "badge-new", sale: "badge-sale" };
+    const badgeLabels = { hot: "🔥 Top ventas", new: "✨ Nuevo", sale: "💥 Oferta" };
+    const bClass = isOut ? "badge-ago" : (badgeClasses[p.badge] || "");
+    const bLabel = isOut ? "Agotado" : (badgeLabels[p.badge] || "");
+    const specTags = Object.values(p.specs).slice(0, 4)
+      .map(v => `<span class="ptag">${v}</span>`).join("");
+    const discount = p.old ? Math.round((1 - p.price / p.old) * 100) : 0;
+
+    return `
+    <div class="pcard" onclick="openProductModal(${p.id})">
+      ${bLabel ? `<span class="pcard-badge ${bClass}">${bLabel}</span>` : ""}
+      <div class="pcard-fav" onclick="event.stopPropagation();toggleFav(this)" title="Favorito">🤍</div>
+      <div class="pcard-img-wrap">
+        <img
+          src="${p.img}"
+          alt="${p.name}"
+          loading="lazy"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+        />
+        <div class="img-placeholder" style="display:none;">📱</div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-brand">${p.brand}</div>
+        <div class="pcard-name">${p.name}</div>
+        <div class="pcard-avail">
+          <span class="avail-dot ${isOut ? "out" : ""}"></span>
+          ${isOut ? "Sin stock disponible" : `${p.stock} unidades disponibles`}
+          ${discount > 0 ? `<span style="margin-left:auto;color:var(--gold);font-weight:700;font-size:0.68rem;">-${discount}%</span>` : ""}
+        </div>
+        <div class="pcard-tags">${specTags}</div>
+        <div class="pcard-footer">
+          <div>
+            <div class="pcard-price">$${p.price.toLocaleString()}</div>
+            ${p.old ? `<span class="pcard-price-old">$${p.old.toLocaleString()}</span>` : ""}
+          </div>
+          <button
+            class="btn-add-card"
+            ${isOut ? "disabled" : ""}
+            onclick="event.stopPropagation();addToCart(${p.id})"
+          >${isOut ? "Agotado" : "+ Agregar"}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ================================================================
+// FAVORITES
+// ================================================================
+function toggleFav(el) {
+  const loved = el.classList.toggle("loved");
+  el.textContent = loved ? "❤️" : "🤍";
+}
+
+// ================================================================
+// CART
+// ================================================================
+function addToCart(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p || p.stock === 0) return;
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++;
+  else cart.push({ id: p.id, qty: 1 });
+  updateCartUI();
+  showToast(`✓ ${p.name} agregado al carrito`);
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  updateCartUI();
+  renderCartStep1();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeFromCart(id);
+  else { updateCartUI(); renderCartStep1(); }
+}
+
+function updateCartUI() {
+  const total = cart.reduce((a, c) => a + c.qty, 0);
+  const floatCnt = document.getElementById("float-cart-cnt");
+  const navCnt = document.getElementById("nav-cart-count");
+  if (total > 0) {
+    floatCnt.textContent = total; floatCnt.style.display = "flex";
+    navCnt.textContent = total; navCnt.style.display = "flex";
+  } else {
+    floatCnt.style.display = "none";
+    navCnt.style.display = "none";
+  }
+}
+
+function cartTotal() {
+  return cart.reduce((a, c) => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    return a + (p ? p.price * c.qty : 0);
+  }, 0);
+}
+
+// ================================================================
+// MODALS
+// ================================================================
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+function handleModalBgClick(e, id) { if (e.target.id === id) closeModal(id); }
+
+// PRODUCT MODAL
+function openProductModal(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  currentProductId = id;
+
+  document.getElementById("modal-img").src = p.img;
+  document.getElementById("modal-img").alt = p.name;
+  document.getElementById("modal-brand").textContent = p.brand;
+  document.getElementById("modal-name").textContent = p.name;
+  document.getElementById("modal-price").textContent = "$" + p.price.toLocaleString();
+
+  const oldEl = document.getElementById("modal-old");
+  const saveEl = document.getElementById("modal-save");
+  if (p.old) {
+    oldEl.textContent = "$" + p.old.toLocaleString();
+    const pct = Math.round((1 - p.price / p.old) * 100);
+    saveEl.textContent = `Ahorras $${(p.old - p.price)} (${pct}% OFF)`;
+    saveEl.style.display = "inline-block";
+  } else {
+    oldEl.textContent = "";
+    saveEl.style.display = "none";
+  }
+
+  document.getElementById("modal-desc").textContent = p.desc;
+
+  document.getElementById("modal-specs").innerHTML = Object.entries(p.specs)
+    .map(([k,v]) => `
+      <div class="modal-spec-item">
+        <div class="modal-spec-label">${k}</div>
+        <div class="modal-spec-val">${v}</div>
+      </div>`).join("");
+
+  const addBtn = document.getElementById("modal-add-btn");
+  addBtn.textContent = p.stock === 0 ? "Sin stock" : "+ Agregar al carrito";
+  addBtn.disabled = p.stock === 0;
+
+  document.getElementById("modal-wa-btn").href =
+    `https://wa.me/593963193264?text=Hola,%20me%20interesa%20el%20${encodeURIComponent(p.brand + " " + p.name)}%20a%20$${p.price}`;
+
+  openModal("prod-modal");
+}
+
+function addToCartFromModal() {
+  if (currentProductId) addToCart(currentProductId);
+}
+
+// CART MODAL
+function openCartModal() {
+  checkoutStep = 1; checkoutMethod = null;
+  renderCartStep1();
+  openModal("cart-modal");
+}
+
+function renderCartStep1() {
+  const content = document.getElementById("cart-modal-content");
+  if (cart.length === 0) {
+    content.innerHTML = `
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;margin-bottom:1.5rem;">Tu carrito</h3>
+      <div class="empty-cart">
+        <div class="ec-icon">🛒</div>
+        <p style="font-size:1rem;font-weight:700;margin-bottom:0.4rem;">Tu carrito está vacío</p>
+        <p>Explora nuestro catálogo y agrega los productos que te interesen.</p>
+        <button onclick="closeModal('cart-modal')" class="btn-primary" style="margin-top:1.5rem;cursor:pointer;border:none;">Ver catálogo →</button>
+      </div>`;
+    return;
+  }
+
+  const shipping = 3.99;
+  const sub = cartTotal();
+  const total = sub + shipping;
+
+  const itemsHtml = cart.map(c => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    if (!p) return "";
+    return `
+    <div class="cart-item-row">
+      <img class="cart-item-img" src="${p.img}" alt="${p.name}" onerror="this.src=''">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${p.brand} ${p.name}</div>
+        <div class="cart-item-price">$${(p.price * c.qty).toFixed(2)}</div>
+      </div>
+      <div class="cart-qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(${p.id},-1)">−</button>
+        <span class="qty-val">${c.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart(${p.id})" title="Eliminar">✕</button>
+    </div>`;
+  }).join("");
+
+  content.innerHTML = `
+    <div class="steps-bar">
+      <div class="step-pill active"></div>
+      <div class="step-pill"></div>
+      <div class="step-pill"></div>
+    </div>
+    <h3 class="step-title">Carrito de compras 🛒</h3>
+    <div class="cart-items-list">${itemsHtml}</div>
+    <div class="cart-summary-box">
+      <div class="cart-summary-row"><span>Subtotal</span><span>$${sub.toFixed(2)}</span></div>
+      <div class="cart-summary-row"><span>Envío a domicilio</span><span>$${shipping.toFixed(2)}</span></div>
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span class="cart-total-val">$${total.toFixed(2)}</span>
+      </div>
+    </div>
+    <button class="btn-pay-main" onclick="goToStep2()">Continuar al pago →</button>`;
+}
+
+function goToStep2() {
+  checkoutStep = 2;
+  const content = document.getElementById("cart-modal-content");
+  const shipping = 3.99;
+  const total = (cartTotal() + shipping).toFixed(2);
+
+  content.innerHTML = `
+    <div class="steps-bar">
+      <div class="step-pill done"></div>
+      <div class="step-pill active"></div>
+      <div class="step-pill"></div>
+    </div>
+    <h3 class="step-title">Método de pago 💳</h3>
+    <div class="pay-methods-grid">
+      <div class="pm-opt" onclick="selectPayMethod('efectivo',this)">
+        <span class="pm-icon">💵</span>
+        <div><div class="pm-name">Efectivo</div><div class="pm-sub">Al recibir</div></div>
+      </div>
+      <div class="pm-opt" onclick="selectPayMethod('tarjeta',this)">
+        <span class="pm-icon">💳</span>
+        <div><div class="pm-name">Tarjeta</div><div class="pm-sub">Visa / MC / Amex</div></div>
+      </div>
+      <div class="pm-opt" onclick="selectPayMethod('transferencia',this)">
+        <span class="pm-icon">🏦</span>
+        <div><div class="pm-name">Transferencia</div><div class="pm-sub">Bancaria</div></div>
+      </div>
+      <div class="pm-opt" onclick="selectPayMethod('deuna',this)">
+        <span class="pm-icon">📱</span>
+        <div><div class="pm-name">De Una / Bimo</div><div class="pm-sub">App Ecuador</div></div>
+      </div>
+      <div class="pm-opt" onclick="selectPayMethod('payphone',this)">
+        <span class="pm-icon">💛</span>
+        <div><div class="pm-name">PayPhone</div><div class="pm-sub">Billetera digital</div></div>
+      </div>
+      <div class="pm-opt" onclick="selectPayMethod('paypal',this)">
+        <span class="pm-icon">🌐</span>
+        <div><div class="pm-name">PayPal</div><div class="pm-sub">Internacional</div></div>
+      </div>
+    </div>
+    <div id="method-extra"></div>
+    <div class="cart-summary-box" style="margin-bottom:1rem;">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span class="cart-total-val">$${total}</span>
+      </div>
+    </div>
+    <button class="btn-pay-main" onclick="goToStep3()">Continuar →</button>
+    <button class="btn-back-step" onclick="openCartModal()">← Volver al carrito</button>`;
+}
+
+function selectPayMethod(method, el) {
+  checkoutMethod = method;
+  document.querySelectorAll(".pm-opt").forEach(x => x.classList.remove("selected"));
+  el.classList.add("selected");
+  const extra = document.getElementById("method-extra");
+  if (method === "transferencia") {
+    const total = (cartTotal() + 3.99).toFixed(2);
+    extra.innerHTML = `
+      <div class="bank-info-box">
+        <strong>Datos bancarios para transferencia:</strong><br>
+        Banco Pichincha · Cuenta Corriente<br>
+        N° <strong>2201-456789</strong> · CelularZone EC<br>
+        RUC: <strong>1791234567001</strong><br>
+        Monto exacto: <strong style="color:var(--txt);">$${total}</strong><br>
+        <span style="font-size:0.75rem;margin-top:0.5rem;display:block;">Envía el comprobante por WhatsApp para confirmar tu pedido.</span>
+      </div>`;
+  } else {
+    extra.innerHTML = "";
+  }
+}
+
+function goToStep3() {
+  if (!checkoutMethod) { showToast("⚠ Selecciona un método de pago"); return; }
+  checkoutStep = 3;
+  const content = document.getElementById("cart-modal-content");
+  const shipping = 3.99;
+  const total = (cartTotal() + shipping).toFixed(2);
+
+  const cardFields = checkoutMethod === "tarjeta" ? `
+    <div class="form-row">
+      <div class="field">
+        <label>Número de tarjeta</label>
+        <input type="text" id="f-card" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+      </div>
+      <div class="field">
+        <label>Titular</label>
+        <input type="text" id="f-cardholder" placeholder="Como aparece en la tarjeta">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Vencimiento</label>
+        <input type="text" id="f-exp" placeholder="MM/AA" maxlength="5">
+      </div>
+      <div class="field">
+        <label>CVV</label>
+        <input type="text" id="f-cvv" placeholder="123" maxlength="4">
+      </div>
+    </div>` : "";
+
+  content.innerHTML = `
+    <div class="steps-bar">
+      <div class="step-pill done"></div>
+      <div class="step-pill done"></div>
+      <div class="step-pill active"></div>
+    </div>
+    <h3 class="step-title">Datos de entrega 📦</h3>
+    <div class="form-section">
+      <div class="form-row">
+        <div class="field">
+          <label>Nombre completo *</label>
+          <input type="text" id="f-nombre" placeholder="Ej: Juan Pérez García">
+        </div>
+        <div class="field">
+          <label>Cédula / RUC *</label>
+          <input type="text" id="f-cedula" placeholder="1234567890">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Correo electrónico *</label>
+          <input type="email" id="f-email" placeholder="correo@ejemplo.com">
+        </div>
+        <div class="field">
+          <label>Teléfono *</label>
+          <input type="text" id="f-tel" placeholder="+593 99 000 0000">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="field">
+          <label>Provincia *</label>
+          <select id="f-prov">
+            <option value="">Selecciona tu provincia...</option>
+            <option>Pichincha</option><option>Guayas</option><option>Azuay</option>
+            <option>Manabí</option><option>El Oro</option><option>Tungurahua</option>
+            <option>Loja</option><option>Chimborazo</option><option>Imbabura</option>
+            <option>Los Ríos</option><option>Cotopaxi</option><option>Sucumbíos</option>
+            <option>Orellana</option><option>Esmeraldas</option><option>Otra</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="field">
+          <label>Dirección completa *</label>
+          <input type="text" id="f-dir" placeholder="Calle principal, número, barrio, ciudad">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="field">
+          <label>Referencias adicionales</label>
+          <input type="text" id="f-ref" placeholder="Ej: Casa azul, junto al parque...">
+        </div>
+      </div>
+      ${cardFields}
+    </div>
+    <div class="cart-summary-box" style="margin-bottom:1rem;">
+      <div class="cart-total-row">
+        <span>Total a pagar</span>
+        <span class="cart-total-val">$${total}</span>
+      </div>
+    </div>
+    <button class="btn-pay-main" onclick="confirmOrder()">✅ Confirmar pedido — $${total}</button>
+    <button class="btn-back-step" onclick="goToStep2()">← Cambiar método de pago</button>`;
+}
+
+function formatCard(el) {
+  let v = el.value.replace(/\D/g, "").substring(0, 16);
+  el.value = v.replace(/(.{4})/g, "$1 ").trim();
+}
+
+function confirmOrder() {
+  const nombre = (document.getElementById("f-nombre") || {}).value?.trim();
+  const cedula = (document.getElementById("f-cedula") || {}).value?.trim();
+  const email  = (document.getElementById("f-email")  || {}).value?.trim();
+  const tel    = (document.getElementById("f-tel")    || {}).value?.trim();
+  const prov   = (document.getElementById("f-prov")   || {}).value;
+  const dir    = (document.getElementById("f-dir")    || {}).value?.trim();
+  if (!nombre || !cedula || !email || !tel || !prov || !dir) {
+    showToast("⚠ Completa todos los campos obligatorios"); return;
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) { showToast("⚠ Correo electrónico inválido"); return; }
+
+  const ref = "CZ-" + Date.now().toString().slice(-7);
+  const shipping = 3.99;
+  const sub = cartTotal();
+  const total = (sub + shipping).toFixed(2);
+  const orderItems = cart.map(c => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    return { ...p, qty: c.qty };
+  });
+
+  lastOrder = { ref, nombre, cedula, email, tel, prov, dir, method: checkoutMethod, items: orderItems, sub, shipping, total };
+  cart = [];
+  updateCartUI();
+  renderSuccess();
+}
+
+function renderSuccess() {
+  const d = lastOrder;
+  const methodNames = {
+    efectivo: "Efectivo al recibir", tarjeta: "Tarjeta de crédito/débito",
+    transferencia: "Transferencia bancaria", deuna: "De Una / Bimo",
+    payphone: "PayPhone", paypal: "PayPal"
+  };
+  const itemsHtml = d.items.map(i =>
+    `<div class="srow"><span>${i.brand} ${i.name} ×${i.qty}</span><span>$${(i.price * i.qty).toFixed(2)}</span></div>`
+  ).join("");
+  const waMsg = encodeURIComponent(`Hola, acabo de confirmar mi pedido #${d.ref} por $${d.total}. ¡Gracias!`);
+
+  document.getElementById("cart-modal-content").innerHTML = `
+    <div class="steps-bar">
+      <div class="step-pill done"></div>
+      <div class="step-pill done"></div>
+      <div class="step-pill done"></div>
+    </div>
+    <div class="success-wrap">
+      <div class="success-anim">🎉</div>
+      <h3>¡Pedido confirmado!</h3>
+      <div class="success-ref">#${d.ref}</div>
+      <p>
+        Gracias <strong>${d.nombre}</strong>, tu pedido ha sido recibido con éxito.<br>
+        Recibirás confirmación en <strong>${d.email}</strong>.<br>
+        Te contactaremos al <strong>${d.tel}</strong> para coordinar la entrega en <strong>${d.prov}</strong>.<br>
+        Pago: <strong>${methodNames[d.method] || d.method}</strong>
+      </p>
+      <div class="success-order-box">
+        ${itemsHtml}
+        <div class="srow"><span>Envío</span><span>$${d.shipping.toFixed(2)}</span></div>
+        <div class="srow total"><span>Total pagado</span><span>$${d.total}</span></div>
+      </div>
+      <button class="btn-invoice-dl" onclick="generatePDF()">📄 Descargar Factura Electrónica PDF</button>
+      <a class="btn-wa-success" href="https://wa.me/593963193264?text=${waMsg}" target="_blank">
+        💬 Confirmar por WhatsApp
+      </a>
+    </div>`;
+}
+
+// ================================================================
+// PDF INVOICE GENERATION
+// ================================================================
+function generatePDF() {
+  if (!lastOrder) { showToast("No hay pedido para facturar"); return; }
+  if (typeof window.jspdf === "undefined") { showToast("Cargando generador de PDF..."); return; }
+
+  const d = lastOrder;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const PW = 210, M = 16;
+  let y = M;
+
+  // HEADER GREEN BAR
+  doc.setFillColor(0, 232, 122);
+  doc.rect(0, 0, PW, 42, "F");
+
+  // COMPANY NAME
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(26);
+  doc.setTextColor(0, 0, 0);
+  doc.text("CelularZone EC", M, 16);
+
+  doc.setFontSize(8.5);
+  doc.setFont("helvetica", "normal");
+  doc.text("WhatsApp: +593 96 319 3264  |  ventas@celularzoneec.com", M, 24);
+  doc.text("RUC: 1791234567001  |  Agente de Retención  |  Todo Ecuador 🇪🇨", M, 30);
+  doc.text("Garantía oficial en todos los equipos · Factura electrónica autorizada SRI", M, 36);
+
+  // INVOICE BOX (top right)
+  doc.setFillColor(255, 61, 87);
+  doc.rect(PW - 54, 6, 46, 32, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("FACTURA", PW - 31, 16, { align: "center" });
+  doc.text("ELECTRÓNICA", PW - 31, 22, { align: "center" });
+  doc.setFontSize(13);
+  doc.text("#" + d.ref, PW - 31, 30, { align: "center" });
+  doc.setFontSize(8);
+  doc.text(new Date().toLocaleDateString("es-EC"), PW - 31, 36, { align: "center" });
+
+  y = 50;
+
+  // CLIENT + DELIVERY INFO
+  doc.setFillColor(245, 248, 252);
+  doc.roundedRect(M, y, PW - 32, 44, 3, 3, "F");
+  doc.setDrawColor(220, 225, 235);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(M, y, PW - 32, 44, 3, 3, "D");
+
+  doc.setFontSize(7.5);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 180, 100);
+  doc.text("DATOS DEL CLIENTE", M + 4, y + 8);
+  doc.text("DIRECCIÓN DE ENTREGA", PW / 2 + 2, y + 8);
+
+  doc.setTextColor(30, 30, 30);
+  doc.setFontSize(9);
+  doc.text(d.nombre, M + 4, y + 16);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  doc.text("Cédula/RUC: " + d.cedula, M + 4, y + 23);
+  doc.text("Teléfono: " + d.tel, M + 4, y + 30);
+  doc.text("Email: " + d.email, M + 4, y + 37);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text(d.prov, PW / 2 + 2, y + 16);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  const dirLines = doc.splitTextToSize(d.dir, 70);
+  doc.text(dirLines, PW / 2 + 2, y + 23);
+  const methodNames2 = {
+    efectivo: "Efectivo al recibir", tarjeta: "Tarjeta Crédito/Débito",
+    transferencia: "Transferencia Bancaria", deuna: "De Una / Bimo",
+    payphone: "PayPhone", paypal: "PayPal"
+  };
+  doc.text("Pago: " + (methodNames2[d.method] || d.method), PW / 2 + 2, y + 36);
+
+  y += 52;
+
+  // TABLE HEADER
+  doc.setFillColor(17, 24, 39);
+  doc.rect(M, y, PW - 32, 10, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.text("DESCRIPCIÓN DEL PRODUCTO", M + 4, y + 7);
+  doc.text("CANT.", M + 96, y + 7, { align: "right" });
+  doc.text("P. UNIT.", M + 115, y + 7, { align: "right" });
+  doc.text("BASE IMP.", M + 137, y + 7, { align: "right" });
+  doc.text("IVA 15%", M + 157, y + 7, { align: "right" });
+  doc.text("TOTAL", PW - M - 2, y + 7, { align: "right" });
+  y += 12;
+
+  // TABLE ROWS
+  let subIva = 0;
+  d.items.forEach((item, i) => {
+    if (i % 2 === 0) {
+      doc.setFillColor(249, 251, 253);
+      doc.rect(M, y - 4, PW - 32, 10, "F");
+    }
+    doc.setTextColor(30, 30, 30);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    const lineTotal = item.price * item.qty;
+    const baseUnit = item.price / 1.15;
+    const ivaUnit = item.price - baseUnit;
+    const ivaLine = ivaUnit * item.qty;
+    const baseImpLine = baseUnit * item.qty;
+    subIva += ivaLine;
+    const desc = item.brand + " " + item.name;
+    doc.text(desc.length > 38 ? desc.substring(0, 36) + "…" : desc, M + 4, y + 3);
+    doc.text(String(item.qty), M + 96, y + 3, { align: "right" });
+    doc.text("$" + item.price.toFixed(2), M + 115, y + 3, { align: "right" });
+    doc.text("$" + baseImpLine.toFixed(2), M + 137, y + 3, { align: "right" });
+    doc.text("$" + ivaLine.toFixed(2), M + 157, y + 3, { align: "right" });
+    doc.text("$" + lineTotal.toFixed(2), PW - M - 2, y + 3, { align: "right" });
+    y += 11;
+  });
+
+  // SHIPPING ROW
+  doc.setFillColor(249, 251, 253);
+  doc.rect(M, y - 4, PW - 32, 10, "F");
+  doc.setTextColor(30, 30, 30);
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8.5);
+  const shipBase = (d.shipping / 1.15);
+  const shipIva = d.shipping - shipBase;
+  doc.text("Envío a domicilio — " + d.prov, M + 4, y + 3);
+  doc.text("1", M + 96, y + 3, { align: "right" });
+  doc.text("$" + d.shipping.toFixed(2), M + 115, y + 3, { align: "right" });
+  doc.text("$" + shipBase.toFixed(2), M + 137, y + 3, { align: "right" });
+  doc.text("$" + shipIva.toFixed(2), M + 157, y + 3, { align: "right" });
+  doc.text("$" + d.shipping.toFixed(2), PW - M - 2, y + 3, { align: "right" });
+  y += 14;
+
+  // TOTALS BOX
+  const totalNum = parseFloat(d.total);
+  const totalBase = (totalNum / 1.15).toFixed(2);
+  const totalIva  = (totalNum - parseFloat(totalBase)).toFixed(2);
+  const boxX = PW - M - 70;
+  doc.setDrawColor(220, 225, 235);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(boxX, y, 70, 40, 3, 3, "FD");
+  doc.setFillColor(250, 252, 254);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  doc.setTextColor(100, 110, 130);
+  doc.text("Subtotal (Base imponible):", boxX + 4, y + 10);
+  doc.text("IVA 15%:", boxX + 4, y + 19);
+  doc.setTextColor(30, 30, 30);
+  doc.text("$" + totalBase, boxX + 66, y + 10, { align: "right" });
+  doc.text("$" + totalIva, boxX + 66, y + 19, { align: "right" });
+
+  // TOTAL ROW
+  doc.setFillColor(0, 232, 122);
+  doc.roundedRect(boxX, y + 24, 70, 14, 3, 3, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(0, 0, 0);
+  doc.text("TOTAL USD:", boxX + 4, y + 33);
+  doc.text("$" + d.total, boxX + 66, y + 33, { align: "right" });
+  y += 48;
+
+  // QR PLACEHOLDER
+  doc.setFillColor(240, 243, 248);
+  doc.roundedRect(M, y, 36, 36, 3, 3, "F");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(150, 160, 180);
+  doc.text("QR Verificación", M + 18, y + 20, { align: "center" });
+  doc.text("SRI", M + 18, y + 27, { align: "center" });
+
+  // LEGAL NOTES
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(100, 110, 130);
+  doc.text("Clave de acceso SRI: " + d.ref + "-" + Date.now().toString().slice(-10), M + 40, y + 10);
+  doc.text("Ambiente: Producción  |  Emisión: Normal  |  Serie: 001-001", M + 40, y + 17);
+  doc.text("Este documento es válido como factura electrónica según resolución NAC-DGERCGC18-00000233.", M + 40, y + 24);
+  y += 44;
+
+  // FOOTER LINE
+  doc.setDrawColor(0, 232, 122);
+  doc.setLineWidth(0.6);
+  doc.line(M, y, PW - M, y);
+  y += 6;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(130, 140, 160);
+  doc.text("CelularZone EC  ·  +593 96 319 3264  ·  ventas@celularzoneec.com  ·  Todo Ecuador", PW / 2, y, { align: "center" });
+  y += 5;
+  doc.text("Garantía: 12 meses en equipos. Para garantía y soporte técnico comuníquese al número indicado.", PW / 2, y, { align: "center" });
+  y += 5;
+  doc.text("Gracias por su compra. CelularZone EC — Tecnología real, precios honestos. 🇪🇨", PW / 2, y, { align: "center" });
+
+  doc.save("Factura-CelularZone-" + d.ref + ".pdf");
+  showToast("📄 Factura descargada exitosamente");
+}
+
+// ================================================================
+// TOAST
+// ================================================================
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  document.getElementById("toast-msg").textContent = msg;
+  el.classList.add("visible");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("visible"), 2800);
+}
+
+// ================================================================
+// EVENT LISTENERS
+// ================================================================
+function setupEventListeners() {
+  // Search
+  document.getElementById("search-input").addEventListener("input", function() {
+    searchQuery = this.value.trim();
+    renderProducts();
+  });
+
+  // Sort
+  document.getElementById("sort-select").addEventListener("change", function() {
+    sortMode = this.value;
+    renderProducts();
+  });
+
+  // Navbar scroll effect
+  window.addEventListener("scroll", function() {
+    const nav = document.getElementById("navbar");
+    nav.classList.toggle("scrolled", window.scrollY > 50);
+    const backTop = document.getElementById("back-top");
+    backTop.classList.toggle("visible", window.scrollY > 400);
+  });
+
+  // Cursor glow
+  document.addEventListener("mousemove", function(e) {
+    const g = document.getElementById("glow");
+    g.style.left = e.clientX + "px";
+    g.style.top  = e.clientY + "px";
+  });
+
+  // Close modals with ESC
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      closeModal("prod-modal");
+      closeModal("cart-modal");
+    }
+  });
+}
+
+</script>
+</body>
+</html>
